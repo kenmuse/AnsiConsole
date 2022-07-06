@@ -366,12 +366,9 @@ function Set-AnsiConsole {
 
         if ($Force -or $PSCmdlet.ShouldProcess("console", "Set output format for text")){
             $content = $content + ($commands.ToArray() -Join ";") + "m"
-
             foreach ($item in $Text) {
-                $content += $item
+                return ($content + $item) | Format-AutoReset
             }
-
-            return ($content | Format-AutoReset)
         }
     }
 }
@@ -397,10 +394,8 @@ function Set-AnsiTextColor {
         if ($Force -or $PSCmdlet.ShouldProcess("console", "Set foreground text color to $Color")){
             $content = "${csi}$($textColorBase + $Color)m"
             foreach ($item in $Text) {
-                $content = $content + $item
+                return ($content + $item) | Format-AutoReset
             }
-
-            return ($content | Format-AutoReset)
         }
     }
 }
@@ -423,10 +418,8 @@ function Set-AnsiBackgroundColor {
         if ($Force -or $PSCmdlet.ShouldProcess("console", "Set background color to $Color")){
             $content = "${csi}$($backgroundColorBase + $Color)m"
             foreach ($item in $Text) {
-                $content = $content + $item
+                return ($content + $item) | Format-AutoReset
             }
-
-            return ($content | Format-AutoReset)
         }
     }
 }
@@ -446,10 +439,8 @@ function Set-AnsiTextPaletteColor {
         if ($Force -or $PSCmdlet.ShouldProcess("console", "Set text to palette color $index")){
             $content = "${csi}38;5;${index}m"
             foreach ($item in $Text) {
-                $content = $content + $item
+                return ($content + $item) | Format-AutoReset
             }
-
-            return ($content | Format-AutoReset)
         }
     }
 }
@@ -469,10 +460,8 @@ function Set-AnsiBackgroundPaletteColor {
         if ($Force -or $PSCmdlet.ShouldProcess("console", "Set background to palette color $index")){
             $content = "${csi}48;5;${index}m"
             foreach ($item in $Text) {
-                $content = $content + $item
+                return ($content + $item) | Format-AutoReset
             }
-
-            return ($content | Format-AutoReset)
         }
     }
 }
@@ -657,14 +646,18 @@ function Format-AutoReset {
     [OutputType([string])]
     param
     (
+        [parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [string[]] $Text
     )
 
     process {
-        if (!$script:AnsiAutoReset) {
-            return $_
-        }
-        else {
-            return "${_}${csi}0m"
+        foreach ($item in $Text) {
+            if (!$script:AnsiAutoReset) {
+                return $item
+            }
+            else {
+                return "${item}${csi}0m"
+            }
         }
     }
 }
