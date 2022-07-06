@@ -15,7 +15,7 @@ function Add-CodeSigning {
         [securestring] $CertificatePassword
     )
 
-    $decoded = [Text.Encoding]::Ascii.GetString([Convert]::FromBase64String($PfxContent))
+    $decoded = [Convert]::FromBase64String($PfxContent)
     $cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new($decoded, $CertificatePassword)
 
     try {
