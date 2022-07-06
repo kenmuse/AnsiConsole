@@ -16,8 +16,9 @@
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"ms-vscode.powershell",
-				"pspester.pester-test",
-				"TylerLeonhardt.vscode-pester-test-adapter"
+				"ms-azuretools.vscode-docker"
+				//"pspester.pester-test",
+				//"TylerLeonhardt.vscode-pester-test-adapter"
 			]
 		}
 	},

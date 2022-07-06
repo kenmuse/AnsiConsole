@@ -19,4 +19,4 @@ RUN apt-get update \
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
-RUN pwsh Install-Module -Name Pester -Force -SkipPublisherCheck
+RUN pwsh -Command Install-Module -Name Pester -Force -SkipPublisherCheck -Scope AllUsers
