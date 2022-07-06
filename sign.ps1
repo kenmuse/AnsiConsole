@@ -9,13 +9,14 @@ function Add-CodeSigning {
         [string] $SourceCodePath = "./src",
 
         [Parameter()]
-        [string] $CertificatePath,
+        [string] $PfxContent,
 
         [Parameter()]
         [securestring] $CertificatePassword
     )
 
-    $cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new($CertificatePath, $CertificatePassword)
+    $decoded = [Text.Encoding]::Ascii.GetString([Convert]::FromBase64String($PfxContent))
+    $cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new($decoded, $CertificatePassword)
 
     try {
         Write-Output "Signing Files"
@@ -23,7 +24,7 @@ function Add-CodeSigning {
             | Where-Object {
                 ($_ | Get-AuthenticodeSignature).Status -eq 'NotSigned'
             }
-            | Set-AuthenticodeSignature -Certificate $cert -TimestampServer 'http://timestamp.digicert.com' 
+            | Set-AuthenticodeSignature -Certificate $cert -TimestampServer 'http://timestamp.digicert.com'
     }
     catch {
         $_ | Format-List -Force
