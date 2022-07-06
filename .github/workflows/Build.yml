@@ -32,7 +32,7 @@ jobs:
       - name: Sign code
         shell: pwsh
         run: |
-          ./Sign-Module.ps1
+          . ./Sign-Module.ps1
           $pwd = (ConvertTo-SecureString $env:PWD -AsPlainText -Force)
           Add-CodeSigning -PfxContent $env:CERT -CertificatePassword $pwd -SourceCodePath ./src
         env:
