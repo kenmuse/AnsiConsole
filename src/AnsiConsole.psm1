@@ -9,7 +9,7 @@ $backgroundColorBase = 40
 
 # Global setting which determines if ANSI graphics commands should be immediately
 # reset after processing. This ensures each line only has the specified formats.
-New-Variable -Name AnsiAutoReset -Value $true -Scope Script -Force   
+New-Variable -Name AnsiAutoReset -Value $true -Scope Script -Force
 
 enum AnsiColor {
     Black = 0
@@ -41,13 +41,17 @@ function Set-AnsiCursorUp {
     .SYNOPSIS
         Generates the ANSI escape sequence for moving the cursor up by some amount.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
         [Parameter(Position = 0)]
-        [byte] $Amount
+        [byte] $Amount,
+        [switch] $Force
     )
 
-    "${csi}${Amount}A"
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor up $Amount")){
+        return "${csi}${Amount}A"
+    }
 }
 
 function Move-AnsiCursorDown {
@@ -55,13 +59,17 @@ function Move-AnsiCursorDown {
     .SYNOPSIS
         Generates the ANSI escape sequence for moving the cursor down by some amount.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
         [Parameter(Position = 0)]
-        [byte] $Amount
+        [byte] $Amount,
+        [switch] $Force
     )
 
-    "${csi}${Amount}B"
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor down $Amount")){
+        return "${csi}${Amount}B"
+    }
 }
 
 function Move-AnsiCursorForward {
@@ -69,13 +77,17 @@ function Move-AnsiCursorForward {
     .SYNOPSIS
         Generates the ANSI escape sequence for moving the cursor forward by some amount.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
         [Parameter(Position = 0)]
-        [byte] $Amount
+        [byte] $Amount,
+        [switch] $Force
     )
 
-    "${csi}${Amount}C"
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor forward $Amount")){
+        return "${csi}${Amount}C"
+    }
 }
 
 function Move-AnsiCursorBack {
@@ -83,13 +95,17 @@ function Move-AnsiCursorBack {
     .SYNOPSIS
         Generates the ANSI escape sequence for moving the cursor backward by some amount.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
         [Parameter(Position = 0)]
-        [byte] $Amount
+        [byte] $Amount,
+        [switch] $Force
     )
 
-    "${csi}${Amount}D"
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor backwards $Amount")){
+        return "${csi}${Amount}D"
+    }
 }
 
 function Move-AnsiCursorNextLine {
@@ -97,13 +113,17 @@ function Move-AnsiCursorNextLine {
     .SYNOPSIS
         Generates the ANSI escape sequence for moving the cursor down by a number of lines.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
         [Parameter(Position = 0)]
-        [byte] $Amount
+        [byte] $Amount,
+        [switch] $Force
     )
 
-    "${csi}${Amount}E"
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor forward $Amount lines")){
+        return "${csi}${Amount}E"
+    }
 }
 
 function Set-AnsiCursorPreviousLine {
@@ -111,13 +131,17 @@ function Set-AnsiCursorPreviousLine {
     .SYNOPSIS
         Generates the ANSI escape sequence for moving the cursor up by a number of lines.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
         [Parameter(Position = 0)]
-        [byte] $Amount
+        [byte] $Amount,
+        [switch] $Force
     )
 
-    "${csi}${Amount}F"
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor back $Amount lines")){
+        return "${csi}${Amount}F"
+    }
 }
 
 function Move-AnsiCursorHorizontalAbsolute {
@@ -125,13 +149,17 @@ function Move-AnsiCursorHorizontalAbsolute {
     .SYNOPSIS
         Generates the ANSI escape sequence for moving the cursor horizontally to an absolute position
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
         [Parameter(Position = 0)]
-        [byte] $Amount
+        [byte] $Column,
+        [switch] $Force
     )
 
-    "${csi}${Amount}G"
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Set cursor to horizontal position $Column")){
+        return "${csi}${Column}G"
+    }
 }
 
 function Move-AnsiCursorPosition {
@@ -139,13 +167,17 @@ function Move-AnsiCursorPosition {
     .SYNOPSIS
         Generates the ANSI escape sequence for absolutely positioning the cursor on the screen.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
         [byte] $Row,
-        [byte] $Column
+        [byte] $Column,
+        [switch] $Force
     )
 
-    "${csi}${row};${column}H"
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor to ($Row, $Column)")){
+        return "${csi}${row};${column}H"
+    }
 }
 
 function Move-AnsiScrollUp {
@@ -153,13 +185,17 @@ function Move-AnsiScrollUp {
     .SYNOPSIS
         Generates the ANSI escape sequence for scrolling the screen up by a number of lines.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
         [Parameter(Position = 0)]
-        [byte] $Amount
+        [byte] $Amount,
+        [switch] $Force
     )
 
-    "${csi}${Amount}S"
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Scroll up $Amount lines")){
+        return "${csi}${Amount}S"
+    }
 }
 
 function Move-AnsiScrollDown {
@@ -167,12 +203,17 @@ function Move-AnsiScrollDown {
     .SYNOPSIS
         Generates the ANSI escape sequence for scrolling the screen up by a number of lines.
     #>
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
         [Parameter(Position = 0)]
-        [byte] $Amount
+        [byte] $Amount,
+        [switch] $Force
     )
 
-    "${csi}${Amount}T"
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Scroll down $Amount lines")){
+        return "${csi}${Amount}T"
+    }
 }
 
 function Save-AnsiCursor {
@@ -180,7 +221,16 @@ function Save-AnsiCursor {
     .SYNOPSIS
         Generates the ANSI escape sequence for saving the current cursor position.
     #>
-    "${csi}s"
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
+    param
+    (
+        [switch] $Force
+    )
+
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Save cursor position")){
+        return "${csi}s"
+    }
 }
 
 function Restore-AnsiCursor {
@@ -188,7 +238,16 @@ function Restore-AnsiCursor {
     .SYNOPSIS
         Generates the ANSI escape sequence for restoring a saved cursor position.
     #>
-    "${csi}u"
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
+    param
+    (
+        [switch] $Force
+    )
+
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Restore cursor position")){
+        return "${csi}u"
+    }
 }
 
 function Clear-AnsiDisplay {
@@ -196,12 +255,16 @@ function Clear-AnsiDisplay {
     .SYNOPSIS
         Generates the ANSI escape sequence to clear the display.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
-        [AnsiClear] $Target
+        [AnsiClear] $Target,
+        [switch] $Force
     )
 
-    "${csi}${Target}J"
+    if ($Force -or $PSCmdlet.ShouldProcess($Target, "Clear console")){
+        return "${csi}${Target}J"
+    }
 }
 
 function Clear-AnsiLine {
@@ -209,12 +272,16 @@ function Clear-AnsiLine {
     .SYNOPSIS
         Generates the ANSI escape sequence to clear a line.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
-        [AnsiClear] $Target
+        [AnsiClear] $Target,
+        [switch] $Force
     )
 
-    "${csi}${Target}K"
+    if ($Force -or $PSCmdlet.ShouldProcess($target, "Clear current line")){
+        return "${csi}${Target}K"
+    }
 }
 
 function Set-AnsiConsole {
@@ -222,20 +289,21 @@ function Set-AnsiConsole {
     .SYNOPSIS
         Generates the ANSI escape sequence to format the color and style of displayed text.
     #>
-    [CmdletBinding(DefaultParameterSetName = "AnsiColor")]
+    [CmdletBinding(DefaultParameterSetName = "AnsiColor", SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param
     (
         [parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [parameter(ParameterSetName = "AnsiColor")]
         [parameter(ParameterSetName = "RgbColor")]
         [string[]] $Text,
-        
+
         [parameter(ParameterSetName = "AnsiColor")]
         [AnsiColor] $Foreground,
 
         [parameter(ParameterSetName = "AnsiColor")]
         [AnsiColor] $Background,
-        
+
         [parameter(ParameterSetName = "RgbColor")]
         [string] $ForegroundRGB,
 
@@ -256,7 +324,8 @@ function Set-AnsiConsole {
 
         [parameter(ParameterSetName = "AnsiColor")]
         [parameter(ParameterSetName = "RgbColor")]
-        [switch] $Italic = $false
+        [switch] $Italic = $false,
+        [switch] $Force
     )
 
     process {
@@ -295,164 +364,309 @@ function Set-AnsiConsole {
             }
         }
 
-        $content = $content + ($commands.ToArray() -Join ";") + "m"
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set output format for text")){
+            $content = $content + ($commands.ToArray() -Join ";") + "m"
 
-        foreach ($item in $Text) {
-            $content += $item
+            foreach ($item in $Text) {
+                $content += $item
+            }
+
+            return ($content | Format-AutoReset)
         }
-        
-        $content | Format-AutoReset
     }
 }
-
 
 function Set-AnsiTextColor {
     <#
     .SYNOPSIS
         Generates the ANSI escape sequence to set the text to one of the eight ANSI colors
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param
     (
         [parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [string[]] $Text,
-        
+
         [parameter(Position = 0, Mandatory = $true)]
-        [AnsiColor] $Color
+        [AnsiColor] $Color,
+        [switch] $Force
     )
 
     process {
-        $content = "${csi}$($textColorBase + $Color)m"
-        foreach ($item in $Text) {
-            $content = $content + $item
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set foreground text color to $Color")){
+            $content = "${csi}$($textColorBase + $Color)m"
+            foreach ($item in $Text) {
+                $content = $content + $item
+            }
+
+            return ($content | Format-AutoReset)
         }
-        
-        $content | Format-AutoReset
     }
 }
 
 function Set-AnsiBackgroundColor {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param
     (
         [parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [string[]] $Text,
-        
+
         [parameter(Position = 0, Mandatory = $true)]
-        [AnsiColor] $Color
+        [AnsiColor] $Color,
+
+        [switch] $Force
     )
 
     process {
-        $content = "${csi}$($backgroundColorBase + $Color)m"
-        foreach ($item in $Text) {
-            $content = $content + $item
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set background color to $Color")){
+            $content = "${csi}$($backgroundColorBase + $Color)m"
+            foreach ($item in $Text) {
+                $content = $content + $item
+            }
+
+            return ($content | Format-AutoReset)
         }
-        
-        $content | Format-AutoReset
     }
 }
 
 function Set-AnsiTextPaletteColor {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
+        [parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [string[]] $Text,
         [Parameter(Position = 0)]
-        [byte] $index
+        [byte] $index,
+        [switch] $Force
     )
 
-    "${csi}38;5;${index}m"
+    process {
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set text to palette color $index")){
+            $content = "${csi}38;5;${index}m"
+            foreach ($item in $Text) {
+                $content = $content + $item
+            }
+
+            return ($content | Format-AutoReset)
+        }
+    }
 }
 
 function Set-AnsiBackgroundPaletteColor {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
+        [parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [string[]] $Text,
         [Parameter(Position = 0)]
-        [byte] $index
+        [byte] $index,
+        [switch] $Force
     )
 
-    "${csi}48;5;${index}m"
+    process {
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set background to palette color $index")){
+            $content = "${csi}48;5;${index}m"
+            foreach ($item in $Text) {
+                $content = $content + $item
+            }
+
+            return ($content | Format-AutoReset)
+        }
+    }
 }
 
 function Set-AnsiTextRgbColor {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
         [byte] $Red,
         [byte] $Green,
-        [byte] $Blue
+        [byte] $Blue,
+        [switch] $Force
     )
 
-    "${csi}38;2;$Red;$Green;${Blue}m"
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Set text tp RGB ($Red, $Green, $Blue)")){
+        return "${csi}38;2;$Red;$Green;${Blue}m"
+    }
 }
 
 function Set-AnsiBackgroundRgbColor {
-    [CmdletBinding()]
-
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param (
         [byte] $Red,
         [byte] $Green,
-        [byte] $Blue
+        [byte] $Blue,
+        [switch] $Force
     )
 
-    "${csi}48;2;$Red;$Green;${Blue}m"
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Set background to RGB ($Red, $Green, $Blue)")){
+        return "${csi}48;2;$Red;$Green;${Blue}m"
+    }
 }
 
 function Reset-AnsiConsole {
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
+    param
+    (
+        [switch] $Force
+    )
+
     process {
-        "${csi}0m"
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Reset all ANSI graphics states")){
+            return "${csi}0m"
+        }
     }
 }
 
 function Set-AnsiBold {
-    "${csi}1m"
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
+    param
+    (
+        [switch] $Force
+    )
+
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable bold")){
+        return "${csi}1m"
+    }
 }
 
 function Set-AnsiDim {
-    "${csi}2m"
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
+    param
+    (
+        [switch] $Force
+    )
+
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable dim")){
+        return "${csi}2m"
+    }
 }
 
 function Set-AnsiItalic {
-    "${csi}3m"
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
+    param
+    (
+        [switch] $Force
+    )
+
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable italic")){
+        return "${csi}3m"
+    }
 }
 
 function Set-AnsiUnderline {
-    "${csi}4m"
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
+    param
+    (
+        [switch] $Force
+    )
+
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable underline")){
+        return "${csi}4m"
+    }
 }
 
 
 function Reset-AnsiBold {
-    "${csi}22m"
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
+    param
+    (
+        [switch]$Force
+    )
+
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable bold")){
+        return "${csi}22m"
+    }
 }
 
 function Reset-AnsiDim {
-    "${csi}22m"
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
+    param
+    (
+        [switch]$Force
+    )
+
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable dim")){
+        return "${csi}22m"
+    }
 }
 
 function Reset-AnsiItalic {
-    "${csi}23m"
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
+    param
+    (
+        [switch]$Force
+    )
+
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable italics")){
+        return "${csi}23m"
+    }
 }
 
 function Reset-AnsiUnderline {
-    "${csi}24m"
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
+    param
+    (
+        [switch]$Force
+    )
+
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable underline")){
+        return "${csi}24m"
+    }
 }
 
 function Get-AnsiAutoReset {
     [CmdletBinding()]
-    
+    [OutputType([string])]
+    param
+    (
+    )
+
     $script:AnsiAutoReset
 }
 
 function Set-AnsiAutoReset {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [OutputType([string])]
     param
     (
         [parameter(Position = 0, Mandatory = $true)]
-        [bool] $Value
+        [bool] $Value,
+        [switch]$Force
     )
 
-    $script:AnsiAutoReset = $value
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable automatic ANSI reset")){
+        $script:AnsiAutoReset = $Value
+    }
 }
 
-filter Format-AutoReset {
-    if (!$script:AnsiAutoReset) { $_ } else { "${_}${csi}0m" }
+function Format-AutoReset {
+    [CmdletBinding()]
+    [OutputType([string])]
+    param
+    (
+    )
+
+    process {
+        if (!$script:AnsiAutoReset) {
+            return $_
+        }
+        else {
+            return "${_}${csi}0m"
+        }
+    }
 }
 
-Export-ModuleMember -Function Set-Ansi*, Get-Ansi*, Reset-Ansi*, Save-AnsiCursor, Restore-AnsiCursor, Move-Ansi*
+Export-ModuleMember -Function Set-Ansi*, Get-Ansi*, Reset-Ansi*, Save-AnsiCursor, Restore-AnsiCursor, Move-Ansi*, Clear-Ansi*
