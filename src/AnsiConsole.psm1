@@ -1,14 +1,17 @@
-# https://notes.burke.libbey.me/ansi-escape-codes/
+Set-StrictMode -Version 'Latest'
+#Requires -Version 5.0
 
+# Configuration
 $escape = [char]0x001B
 $csi = "$escape["
 $textColorBase = 30
 $backgroundColorBase = 40
 
+# Global setting which determines if ANSI graphics commands should be immediately
+# reset after processing. This ensures each line only has the specified formats.
 New-Variable -Name AnsiAutoReset -Value $true -Scope Script -Force   
 
-enum AnsiColor 
-{
+enum AnsiColor {
     Black = 0
     Red = 1
     Green = 2
@@ -27,8 +30,7 @@ enum AnsiColor
     BrightWhite = 67
 }
 
-enum AnsiClear
-{
+enum AnsiClear {
     CursorToEnd = 0
     CursorToStart = 1
     All = 2
@@ -181,8 +183,7 @@ function Save-AnsiCursor {
     "${csi}s"
 }
 
-function Restore-AnsiCursor
-{
+function Restore-AnsiCursor {
     <#
     .SYNOPSIS
         Generates the ANSI escape sequence for restoring a saved cursor position.
@@ -216,13 +217,12 @@ function Clear-AnsiLine {
     "${csi}${Target}K"
 }
 
-function Set-AnsiConsole
-{
+function Set-AnsiConsole {
     <#
     .SYNOPSIS
         Generates the ANSI escape sequence to format the color and style of displayed text.
     #>
-    [CmdletBinding(DefaultParameterSetName="AnsiColor")]
+    [CmdletBinding(DefaultParameterSetName = "AnsiColor")]
     param
     (
         [parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
@@ -259,8 +259,7 @@ function Set-AnsiConsole
         [switch] $Italic = $false
     )
 
-    process
-    {
+    process {
         $content = "${csi}"
         $commands = New-Object System.Collections.ArrayList
         if ($Dim) { [void]$commands.Add("2") }
@@ -296,10 +295,9 @@ function Set-AnsiConsole
             }
         }
 
-        $content = $content + ($commands.ToArray() -Join ";") +"m"
+        $content = $content + ($commands.ToArray() -Join ";") + "m"
 
-        foreach ($item in $Text)
-        {
+        foreach ($item in $Text) {
             $content += $item
         }
         
@@ -308,8 +306,7 @@ function Set-AnsiConsole
 }
 
 
-function Set-AnsiTextColor
-{
+function Set-AnsiTextColor {
     <#
     .SYNOPSIS
         Generates the ANSI escape sequence to set the text to one of the eight ANSI colors
@@ -324,11 +321,9 @@ function Set-AnsiTextColor
         [AnsiColor] $Color
     )
 
-    process
-    {
+    process {
         $content = "${csi}$($textColorBase + $Color)m"
-        foreach ($item in $Text)
-        {
+        foreach ($item in $Text) {
             $content = $content + $item
         }
         
@@ -336,9 +331,8 @@ function Set-AnsiTextColor
     }
 }
 
-function Set-AnsiBackgroundColor
-{
-[CmdletBinding()]
+function Set-AnsiBackgroundColor {
+    [CmdletBinding()]
     param
     (
         [parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
@@ -348,11 +342,9 @@ function Set-AnsiBackgroundColor
         [AnsiColor] $Color
     )
 
-    process
-    {
+    process {
         $content = "${csi}$($backgroundColorBase + $Color)m"
-        foreach ($item in $Text)
-        {
+        foreach ($item in $Text) {
             $content = $content + $item
         }
         
@@ -405,7 +397,7 @@ function Set-AnsiBackgroundRgbColor {
 
 function Reset-AnsiConsole {
     process {
-    "${csi}0m"
+        "${csi}0m"
     }
 }
 
@@ -459,9 +451,8 @@ function Set-AnsiAutoReset {
     $script:AnsiAutoReset = $value
 }
 
-filter Format-AutoReset 
-{
-   if (!$script:AnsiAutoReset) { $_ } else { "${_}${csi}0m" }
+filter Format-AutoReset {
+    if (!$script:AnsiAutoReset) { $_ } else { "${_}${csi}0m" }
 }
 
 Export-ModuleMember -Function Set-Ansi*, Get-Ansi*, Reset-Ansi*, Save-AnsiCursor, Restore-AnsiCursor, Move-Ansi*
