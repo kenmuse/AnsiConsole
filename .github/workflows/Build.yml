@@ -36,8 +36,8 @@ jobs:
           $pwd = (ConvertTo-SecureString $env:PWD -AsPlainText -Force)
           Add-CodeSigning -PfxContent $env:CERT -CertificatePassword $pwd -SourceCodePath ./src
         env:
-          PWD: ${{ secrets.CERTIFICATE_PASSWORD }}
-          CERT: ${{ secrets.CERTIFICATE_CONTENT }}
+          PWD: ${{ secrets.CODESIGN_PWD }}
+          CERT: ${{ secrets.CODESIGN_PFX }}
       
       - name: Perform a Pester test
         shell: pwsh
