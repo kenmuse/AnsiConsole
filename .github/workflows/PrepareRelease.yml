@@ -54,7 +54,7 @@ jobs:
           "# Unexported Members" | Add-Content $env:GITHUB_STEP_SUMMARY
           $markdown = Get-Unexported | Select-Object Name, Module | ConvertTo-Markdown
           $markdown | Add-Content $env:GITHUB_STEP_SUMMARY
-          & gh pr comment ${{ steps.create-pr.outputs.PRNUMBER }} --body "$markdown"
+          $markdown | & gh pr comment ${{ steps.create-pr.outputs.PRNUMBER }} -F -
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
