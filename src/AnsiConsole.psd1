@@ -26,7 +26,7 @@ CompanyName = 'Ken Muse'
 Copyright = '(c) 2022 Ken Muse. All rights reserved.'
 
 # Description of the functionality provided by this module
-# Description = 'Supports the use of ANSI escape sequences'
+Description = 'Provides methods for generating ANSI escape sequences for creating formatted text output'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.1'
