@@ -30,6 +30,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Sign code
+        if: ${{ github.event.name == 'pull_request' && contains(github.event.pull_request.head.ref, 'releases') }}
         shell: pwsh
         run: |
           . ./Sign-Module.ps1
@@ -59,9 +60,11 @@ jobs:
           # Optional category for the results
           # Used to differentiate multiple results for one commit
           category: PSScriptAnalyzer
+      - name: Export Event Details
+        run: echo "${{ toJson(github) }}"
 
       - name: Export list of private functions
-        if:  ${{ github.event.name == 'pull_request' && contains(github.event.pull_request.head.ref, 'releases') }}
+        if: ${{ github.event.name == 'pull_request' && contains(github.event.pull_request.head.ref, 'releases') }}
         shell: pwsh
         run: |
           Install-Module PSMarkdown -Force
@@ -73,8 +76,7 @@ jobs:
       - name: Build and publish
         if: ${{ false }}
         env:
-          NUGET_KEY: ${{ secrets.NUGET_KEY }}
+          NUGET_KEY: ${{ secrets.PSGALLERY_API }}
         shell: pwsh
         run: |
-          ./build.ps1 -Path /.src/
           Publish-Module -Path ./src -NuGetApiKey $env:NUGET_KEY -Verbose
