@@ -16,10 +16,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - run: |
-        echo "# Release v${GITHUB_HEAD_REF##*/v} :rocket:" >> $GITHUB_STEP_SUMMARY
+    - id: set-version
+      run: |
+        echo "# Release ${GITHUB_HEAD_REF##*/} :rocket:" >> $GITHUB_STEP_SUMMARY
         echo "PR #${{ github.event.number }} has been merged  " >> $GITHUB_STEP_SUMMARY
         echo "${{ github.event.pull_request.head.ref }} :arrow_right: ${{ github.event.pull_request.base.ref }}" >> $GITHUB_STEP_SUMMARY
-        gh release create v${GITHUB_HEAD_REF##*/v} -t v${GITHUB_HEAD_REF##*/v} -n "Published by ${{ github.actor }}" --target "${{ github.head_ref }}"
+        echo gh release create ${GITHUB_HEAD_REF##*/} -t ${GITHUB_HEAD_REF##*/} -n "Published by ${{ github.actor }}" --target "${{ github.head_ref }}"
+        echo "::set-output name=TAG_VERSION::${GITHUB_HEAD_REF##*/}"
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/github-script@v5
+      with:
+        script: |
+          github.rest.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: 'refs/tags/${{ steps.set-version.outputs.TAG_VERSION }}',
+            sha: context.sha
+          })

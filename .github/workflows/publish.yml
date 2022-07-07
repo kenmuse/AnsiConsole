@@ -28,16 +28,19 @@ jobs:
       - name: Upload signed module
         uses: actions/upload-artifact@v3.1.0
         with:
-          name: src
+          name: ${{ github.event.repository.name }}
           path: ./src/
           if-no-files-found: error
           retention-days: 1
 
-      - name: Upload tests
+      - name: Upload Code
         uses: actions/upload-artifact@v3.1.0
         with:
-          name: tests
-          path: ./tests/
+          name: Code
+          path: |
+           ./src
+           ./tests
+           ./PSScriptAnalyzerSettings.psd1
           if-no-files-found: error
           retention-days: 1
 
@@ -45,11 +48,13 @@ jobs:
     runs-on: windows-latest
     needs: sign
     steps:
-      - name: Download module
+      - name: Download code
         uses: actions/download-artifact@v3.0.0
         with:
+          name: Code
           path: .
       - run: dir /s
+        shell: cmd
       - name: Perform a Pester test
         shell: pwsh
         run: |
@@ -75,9 +80,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: sign
     steps:
-      - name: Download module
+      - name: Download code
         uses: actions/download-artifact@v3.0.0
         with:
+          name: Code
           path: .
       - run: ls -a -l -R
       - name: Perform a Pester test
@@ -105,9 +111,10 @@ jobs:
     runs-on: macos-latest
     needs: sign
     steps:
-      - name: Download module
+      - name: Download code
         uses: actions/download-artifact@v3.0.0
         with:
+          name: Code
           path: .
 
       - name: Perform a Pester test
@@ -141,7 +148,7 @@ jobs:
       - name: Download module
         uses: actions/download-artifact@v3.0.0
         with:
-         name: src
+         name: ${{ github.event.repository.name }}
          path: ./src
 
       - name: List details
