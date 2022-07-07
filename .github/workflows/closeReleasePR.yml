@@ -1,4 +1,4 @@
-name: "Close PR & Release"
+name: "Release - PR Close"
 
 # only trigger on pull request closed events
 on:

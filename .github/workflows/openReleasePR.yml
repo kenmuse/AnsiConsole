@@ -1,8 +1,5 @@
-name: Open Release PR
+name: "Release - PR Open"
 on:
-  # push:
-  #  branches:
-  #    - releases/v*
   create:
 
   workflow_dispatch:
@@ -54,7 +51,7 @@ jobs:
           "# Unexported Members" | Add-Content $env:GITHUB_STEP_SUMMARY
           $markdown = Get-Unexported | Select-Object Name, Module | ConvertTo-Markdown
           $markdown | Add-Content $env:GITHUB_STEP_SUMMARY
-          "#Unexported Members\n$markdown" | & gh pr comment ${{ steps.create-pr.outputs.PRNUMBER }} -F -
+          "# Unexported Members`n$markdown" | & gh pr comment ${{ steps.create-pr.outputs.PRNUMBER }} -F -
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
