@@ -31,15 +31,10 @@ jobs:
           name: Package
           path: |
             ./src
-            ./test
+            ./tests
+            PSScriptAnalyzerSettings.psd1
           if-no-files-found: error
-
-      - name: Upload signed module
-        uses: actions/upload-artifact@v3.1.0
-        with:
-          name: ${{ github.event.repository.name }}
-          path: ./src/
-          if-no-files-found: error
+          retention-days: 1
 
   test-windows:
     runs-on: windows-latest
@@ -147,12 +142,13 @@ jobs:
       - name: Download module
         uses: actions/download-artifact@v3.0.0
         with:
-         name: ${{ github.event.repository.name }}
-         path: ./src
+         name: Package
+         path: .
+
       - name: List details
         run: ls -l -a
+
       - name: Publish
-        if: ${{ false }}
         env:
           NUGET_KEY: ${{ secrets.PSGALLERY_API }}
         shell: pwsh
