@@ -20,6 +20,6 @@ jobs:
         echo "# Release v${GITHUB_HEAD_REF##*/v} :rocket:" >> $GITHUB_STEP_SUMMARY
         echo "PR #${{ github.event.number }} has been merged  " >> $GITHUB_STEP_SUMMARY
         echo "${{ github.event.pull_request.head.ref }} :arrow_right: ${{ github.event.pull_request.base.ref }}" >> $GITHUB_STEP_SUMMARY
-        gh release create v${GITHUB_HEAD_REF##*/v} -t v${GITHUB_HEAD_REF##*/v} -n "Published by ${{ github.actor }}"
+        gh release create v${GITHUB_HEAD_REF##*/v} -t v${GITHUB_HEAD_REF##*/v} -n "Published by ${{ github.actor }}" --target "${{ github.head_ref }}"
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
