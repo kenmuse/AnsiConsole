@@ -48,7 +48,7 @@ jobs:
           Install-Module PSMarkdown -Force
           Import-Module PSMarkdown
           . .\Get-Unexported.ps1
-          $markdown = '# Unexported Members`r'
+          $markdown = "# Unexported Members`r"
           $markdown += (Get-Unexported | Select-Object Name, Module | ConvertTo-Markdown | Out-String)
           $markdown | Add-Content $env:GITHUB_STEP_SUMMARY
           $markdown | & gh pr comment ${{ steps.create-pr.outputs.PRNUMBER }} -F -
