@@ -20,7 +20,7 @@ function Set-ModuleVersion {
 
             # Update the manifest file
             try {
-                (Get-Content $file) -replace $version, $newVersion | Set-Content $file -Encoding string
+                (Get-Content $PsdPath) -replace $version, $newVersion | Set-Content $PsdPath -Encoding string
             }
             catch {
                 Write-Error "Failed to update the module: $_"

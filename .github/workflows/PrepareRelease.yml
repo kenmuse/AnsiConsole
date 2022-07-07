@@ -1,0 +1,46 @@
+name: Create Release
+on:
+  # push:
+  #  branches:
+  #    - releases/v*
+  create:
+  
+  workflow_dispatch:
+  
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.ref, 'refs/heads/releases/') }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      
+      - name: Update Version
+        id: update-version
+        shell: pwsh
+        run: |
+          . ./Set-ModuleVersion.ps1
+          $ref = $env:GITHUB_REF_NAME
+          $version = $ref.Substring($ref.LastIndexOf("/v") + 2)
+          "::set-output name=VERSION_NUMBER::$version"
+          Set-ModuleVersion -PsdPath ./src/AnsiConsole.psd1 -VersionNumber $version
+      - name: Push updated version     
+        shell: bash
+        run: |
+          git config --global user.name ${{ github.actor }}
+          git config --global user.email '${{ github.actor }}@users.noreply.github.com'
+          git commit -am "Update version to ${{ steps.update-version.outputs.VERSION_NUMBER }}"
+          git push
+      - name: Create PR
+        shell: bash
+        run: |
+          VERSION=v${GITHUB_REF_NAME##*/v}
+          echo "Version: $VERSION"
+          VERSION=v${{ steps.update-version.outputs.VERSION_NUMBER }}
+          gh pr create --title "Merge $VERSION to main" --body "Prepare release $VERSION" --base main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
