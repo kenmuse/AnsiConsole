@@ -1,0 +1,37 @@
+name: Create Release
+on:
+  # push:
+  #  branches:
+  #    - releases/v*
+  create:
+  
+  workflow_dispatch:
+  
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      
+      - name: Update Version
+        if: ${{ contains(github.ref, 'refs/heads/releases/') }}
+        id: update-version
+        shell: pwsh
+        run: |
+          . ./Set-ModuleVersion.ps1
+          $ref = $env:GITHUB_REF_NAME
+          $version = $ref.Substring($ref.LastIndexOf("/v") + 2)
+          "::set-output name=VERSION_NUMBER::$version"
+          Set-ModuleVersion -PsdPath ./src/AnsiConsole.psd1 -VersionNumber -WhatIf
+      - name: Push updated version     
+        shell: bash
+        run: |
+          git config --global user.name ${{ github.actor }}
+          git config --global user.email '${{ github.actor }}@users.noreply.github.com'
+          git commit -am "Update version to ${{ steps.update-version.outpus.VERSION_NUMBER }}"
+          git push
+      
