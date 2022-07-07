@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
 name: "Release - PR Close"
 
 # only trigger on pull request closed events
@@ -18,6 +20,6 @@ jobs:
         echo "# Release v${GITHUB_HEAD_REF##*/v} :rocket:" >> $GITHUB_STEP_SUMMARY
         echo "PR #${{ github.event.number }} has been merged  " >> $GITHUB_STEP_SUMMARY
         echo "${{ github.event.pull_request.head.ref }} :arrow_right: ${{ github.event.pull_request.base.ref }}" >> $GITHUB_STEP_SUMMARY
-        gh release create v${GITHUB_HEAD_REF##*/v} -t v${GITHUB_HEAD_REF##*/v}
+        gh release create v${GITHUB_HEAD_REF##*/v} -t v${GITHUB_HEAD_REF##*/v} -n "Published by ${{ github.actor }}"
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

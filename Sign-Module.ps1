@@ -20,11 +20,12 @@ function Add-CodeSigning {
 
     try {
         Write-Output "Signing Files"
-        Get-ChildItem -Path $SourceCodePath -Filter *.ps* -Include *.ps1,*.psm1,*.psd1 -Recurse
+        $result = Get-ChildItem -Path $SourceCodePath -Filter *.ps* -Include *.ps1,*.psm1,*.psd1 -Recurse
             | Where-Object {
                 ($_ | Get-AuthenticodeSignature).Status -eq 'NotSigned'
             }
             | Set-AuthenticodeSignature -Certificate $cert -TimestampServer 'http://timestamp.digicert.com'
+        return $result;
     }
     catch {
         $_ | Format-List -Force

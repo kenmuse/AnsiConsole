@@ -1,16 +1,13 @@
-# This is a basic workflow to help you get started with Actions
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 permissions:
@@ -19,14 +16,10 @@ permissions:
   contents: read
 
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: windows-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
       - name: Perform a Pester test
@@ -50,12 +43,3 @@ jobs:
           # Used to differentiate multiple results for one commit
           category: windows
 
-      - name: Export list of private functions
-        if: ${{ github.event.name == 'pull_request' && contains(github.event.pull_request.head.ref, 'releases') }}
-        shell: pwsh
-        run: |
-          Install-Module PSMarkdown -Force
-          Import-Module PSMarkdown
-          . .\Get-Unexported.ps1
-          "# Unexported Members" | Add-Content $env:GITHUB_STEP_SUMMARY
-          Get-Unexported | Select-Object Name, Module | ConvertTo-Markdown | Add-Content $env:GITHUB_STEP_SUMMARY
