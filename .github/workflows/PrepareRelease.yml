@@ -38,7 +38,7 @@ jobs:
         shell: bash
         run: |
           VERSION=v${GITHUB_HEAD_REF##*/v}
-           gh pr create --title "Merge $VERSION to main" --base main
+           gh pr create --title "Merge $VERSION to main" --body "Prepare release $VERSION" --base main
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
