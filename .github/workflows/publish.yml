@@ -14,12 +14,12 @@ jobs:
       - name: Sign code
         shell: pwsh
         run: |
-          Install-Module PSMarkdown -Force -AllowClobber
-          Import-Module PSMarkdown
           . ./build/Sign-Module.ps1
           $pswd = (ConvertTo-SecureString $env:PSWD -AsPlainText -Force)
           $result = Add-CodeSigning -PfxContent $env:CERT -CertificatePassword $pswd -SourceCodePath ./src
-          $result | ConvertTo-Markdown | Out-String | Add-Content $env:GITHUB_STEP_SUMMARY
+          '```' | Add-Content $env:GITHUB_STEP_SUMMARY
+          $result | Add-Content $env:GITHUB_STEP_SUMMARY
+          '```' | Add-Content $env:GITHUB_STEP_SUMMARY
           $result
         env:
           PSWD: ${{ secrets.CODESIGN_PWD }}
