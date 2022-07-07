@@ -149,7 +149,7 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         with:
          name: ${{ github.event.repository.name }}
-         path: ./src
+         path: ./${{ github.event.repository.name }}
 
       - name: List details
         run: ls -l -a -R
@@ -158,4 +158,4 @@ jobs:
         env:
           NUGET_KEY: ${{ secrets.PSGALLERY_API }}
         shell: pwsh
-        run: Publish-Module -Path ./src -NuGetApiKey $env:NUGET_KEY -Verbose
+        run: Publish-Module -Path ./${{ github.event.repository.name }} -NuGetApiKey $env:NUGET_KEY -Verbose

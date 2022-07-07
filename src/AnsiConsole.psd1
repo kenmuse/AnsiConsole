@@ -23,7 +23,7 @@ Author = 'Ken Muse'
 CompanyName = 'Ken Muse'
 
 # Copyright statement for this module
-Copyright = '(c) vscode. All rights reserved.'
+Copyright = '(c) 2022 Ken Muse. All rights reserved.'
 
 # Description of the functionality provided by this module
 # Description = 'Supports the use of ANSI escape sequences'
