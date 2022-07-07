@@ -16,7 +16,7 @@ jobs:
         run: |
           Install-Module PSMarkdown -Force -AllowClobber
           Import-Module PSMarkdown
-          . ./Sign-Module.ps1
+          . ./build/Sign-Module.ps1
           $pswd = (ConvertTo-SecureString $env:PSWD -AsPlainText -Force)
           $result = Add-CodeSigning -PfxContent $env:CERT -CertificatePassword $pswd -SourceCodePath ./src
           $result | ConvertTo-Markdown | Out-String | Add-Content $env:GITHUB_STEP_SUMMARY
@@ -25,18 +25,20 @@ jobs:
           PSWD: ${{ secrets.CODESIGN_PWD }}
           CERT: ${{ secrets.CODESIGN_PFX }}
 
-      - name: Upload signed code
+      - name: Upload signed module and tests
         uses: actions/upload-artifact@v3.1.0
         with:
           name: Package
-          path: .
+          path: |
+            ./src
+            ./test
           if-no-files-found: error
 
-      - name: Upload package folder
+      - name: Upload signed module
         uses: actions/upload-artifact@v3.1.0
         with:
           name: ${{ github.event.repository.name }}
-          path: ./src
+          path: ./src/
           if-no-files-found: error
 
   test-windows:
@@ -146,10 +148,11 @@ jobs:
         uses: actions/download-artifact@v3.0.0
         with:
          name: ${{ github.event.repository.name }}
-         path: .
+         path: ./src
       - name: List details
         run: ls -l -a
       - name: Publish
+        if: ${{ false }}
         env:
           NUGET_KEY: ${{ secrets.PSGALLERY_API }}
         shell: pwsh

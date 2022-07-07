@@ -9,16 +9,18 @@
 		// Configure properties specific to VS Code.
 		"vscode": {
 			// Set *default* container specific settings.json values on container create.
-			"settings": { 
+			"settings": {
 				"terminal.integrated.defaultProfile.linux": "pwsh"
 			},
-			
+
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"ms-vscode.powershell",
 				"ms-azuretools.vscode-docker",
 				"redhat.vscode-yaml",
-        "editorconfig.editorconfig"
+				"editorconfig.editorconfig",
+				"mhutchie.git-graph",
+				"eamodio.gitlens"
 				//"pspester.pester-test",
 				//"TylerLeonhardt.vscode-pester-test-adapter"
 			]

@@ -21,7 +21,7 @@ jobs:
         id: update-version
         shell: pwsh
         run: |
-          . ./Set-ModuleVersion.ps1
+          . ./build/Set-ModuleVersion.ps1
           $ref = $env:GITHUB_REF_NAME
           $version = $ref.Substring($ref.LastIndexOf("/v") + 2)
           "::set-output name=VERSION_NUMBER::$version"
@@ -49,7 +49,7 @@ jobs:
         run: |
           Install-Module PSMarkdown -Force
           Import-Module PSMarkdown
-          . .\Get-Unexported.ps1
+          . ./build/Get-Unexported.ps1
           $markdown = "# Unexported Members`r"
           $markdown += (Get-Unexported | Select-Object Name, Module | ConvertTo-Markdown | Out-String)
           $markdown | Add-Content $env:GITHUB_STEP_SUMMARY
