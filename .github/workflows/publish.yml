@@ -8,6 +8,8 @@ on:
 jobs:
   sign:
     runs-on: windows-latest
+    outputs:
+      PKG_VERSION: ${{ steps.version-number.outputs.PKG_VERSION }}
     steps:
       - uses: actions/checkout@v3
 
