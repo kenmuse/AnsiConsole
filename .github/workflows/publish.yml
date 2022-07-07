@@ -33,6 +33,13 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+      - name: Publish version
+        id: version-number
+        run: |
+          $version = "${{ github.event.release.tag_name }}"
+          "::set-output name=VERSION::$($version.Substring(1))"
+        shell: pwsh
+
   test-windows:
     runs-on: windows-latest
     needs: sign
@@ -137,7 +144,9 @@ jobs:
       - test-linux
       - test-macos
     runs-on: ubuntu-latest
-    environment: PSGallery
+    environment:
+      name: PSGallery
+      url: https://www.powershellgallery.com/packages/${{ github.event.repository.name }}/${{ jobs.sign.outputs.VERSION }}
     steps:
       - name: Download module
         uses: actions/download-artifact@v3.0.0
