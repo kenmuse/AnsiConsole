@@ -34,3 +34,14 @@ jobs:
             ref: 'refs/tags/${{ steps.set-version.outputs.TAG_VERSION }}',
             sha: context.sha
           })
+
+    - uses: tibdex/github-app-token@v1
+      id: get-token
+      with:
+        app_id: ${{ secrets.RELEASE_APP_ID }}
+        installation_id: ${{ secrets.RELEASE_APP_INSTALLID }}
+        private_key: ${{ secrets.RELEASE_APP_KEY }}
+
+    - run: gh release create ${{ steps.set-version.outputs.TAG_VERSION }} -t ${{ steps.set-version.outputs.TAG_VERSION }} -n "Published by ${{ github.actor }}" --target "${{ github.head_ref }}"
+      env:
+        GH_TOKEN: ${{ steps.get-token.outputs.token }}
