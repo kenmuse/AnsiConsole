@@ -1,0 +1,24 @@
+TOPIC
+    about_AnsiConsole
+
+SHORT DESCRIPTION
+    Provides functions for colorizing and positioning on the console using ANSI escape
+    sequences.
+
+LONG DESCRIPTION
+    This modules creates formatted output using ANSI escape sequences. The easiest way
+    to use the module is to pipe strings through Set-AnsiConsole, passing the results
+    to the host environment. For example:
+
+    "This is red" | Set-AnsiConsole -Foreground BrightRed -Bold
+
+    By default, the functions will automatically apply an ANSI reset to the end of each
+    string. This can be disabled by using:
+
+    Set-AnsiAutoReset $false
+
+SEE ALSO
+    More information:
+            http://www.kenmuse.com
+    GitHub repository:
+            https://github.com/KenMuse/AnsiConsole

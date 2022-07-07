@@ -33,7 +33,7 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-      - name: Upload Code
+      - name: Upload testable code
         uses: actions/upload-artifact@v3.1.0
         with:
           name: Code
@@ -53,8 +53,7 @@ jobs:
         with:
           name: Code
           path: .
-      - run: dir /s
-        shell: cmd
+
       - name: Perform a Pester test
         shell: pwsh
         run: |
@@ -85,7 +84,7 @@ jobs:
         with:
           name: Code
           path: .
-      - run: ls -a -l -R
+
       - name: Perform a Pester test
         shell: pwsh
         run: |
@@ -150,9 +149,6 @@ jobs:
         with:
          name: ${{ github.event.repository.name }}
          path: ./${{ github.event.repository.name }}
-
-      - name: List details
-        run: ls -l -a -R
 
       - name: Publish
         env:

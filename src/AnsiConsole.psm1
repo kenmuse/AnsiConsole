@@ -412,6 +412,10 @@ function Set-AnsiTextColor {
 }
 
 function Set-AnsiBackgroundColor {
+    <#
+    .SYNOPSIS
+        Generates the ANSI escape sequence to set the background for the text to a specific color.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param
@@ -436,6 +440,10 @@ function Set-AnsiBackgroundColor {
 }
 
 function Set-AnsiTextPaletteColor {
+    <#
+    .SYNOPSIS
+        Generates the ANSI escape sequence to set the text to one of the 256 palette colors.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param (
@@ -457,6 +465,10 @@ function Set-AnsiTextPaletteColor {
 }
 
 function Set-AnsiBackgroundPaletteColor {
+    <#
+    .SYNOPSIS
+        Generates the ANSI escape sequence to set the background to one of the 256 ANSI palette colors.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param (
@@ -478,6 +490,10 @@ function Set-AnsiBackgroundPaletteColor {
 }
 
 function Set-AnsiTextRgbColor {
+    <#
+    .SYNOPSIS
+        Generates the ANSI escape sequence to set the text to a specific RGB color.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param (
@@ -493,6 +509,10 @@ function Set-AnsiTextRgbColor {
 }
 
 function Set-AnsiBackgroundRgbColor {
+    <#
+    .SYNOPSIS
+        Generates the ANSI escape sequence to set the background to a specific RGB color.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param (
@@ -508,6 +528,10 @@ function Set-AnsiBackgroundRgbColor {
 }
 
 function Reset-AnsiConsole {
+    <#
+    .SYNOPSIS
+        Generates the ANSI escape sequence to reset the console formatting.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param
@@ -523,6 +547,10 @@ function Reset-AnsiConsole {
 }
 
 function Set-AnsiBold {
+    <#
+    .SYNOPSIS
+        Generates the ANSI escape sequence to format the text bold.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param
@@ -536,6 +564,10 @@ function Set-AnsiBold {
 }
 
 function Set-AnsiDim {
+    <#
+    .SYNOPSIS
+        Generates the ANSI escape sequence to format the text dim.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param
@@ -549,6 +581,10 @@ function Set-AnsiDim {
 }
 
 function Set-AnsiItalic {
+    <#
+    .SYNOPSIS
+        Generates the ANSI escape sequence to format the text in italics.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param
@@ -562,6 +598,10 @@ function Set-AnsiItalic {
 }
 
 function Set-AnsiUnderline {
+    <#
+    .SYNOPSIS
+        Generates the ANSI escape sequence to format the text with an underline.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param
@@ -576,6 +616,10 @@ function Set-AnsiUnderline {
 
 
 function Reset-AnsiBold {
+    <#
+    .SYNOPSIS
+        Generates the ANSI escape sequence to remove the bold formatting.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param
@@ -589,6 +633,10 @@ function Reset-AnsiBold {
 }
 
 function Reset-AnsiDim {
+    <#
+    .SYNOPSIS
+        Generates the ANSI escape sequence to remove the dim formatting.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param
@@ -602,6 +650,10 @@ function Reset-AnsiDim {
 }
 
 function Reset-AnsiItalic {
+    <#
+    .SYNOPSIS
+        Generates the ANSI escape sequence to remove the italic formatting.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param
@@ -615,6 +667,10 @@ function Reset-AnsiItalic {
 }
 
 function Reset-AnsiUnderline {
+    <#
+    .SYNOPSIS
+        Generates the ANSI escape sequence to remove the underline formatting.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param
@@ -628,6 +684,11 @@ function Reset-AnsiUnderline {
 }
 
 function Get-AnsiAutoReset {
+    <#
+    .SYNOPSIS
+        Gets a value indicating whether piped strings automatically include
+        an ANSI reset command at the end to restore the default formatting.
+    #>
     [CmdletBinding()]
     [OutputType([string])]
     param
@@ -638,6 +699,11 @@ function Get-AnsiAutoReset {
 }
 
 function Set-AnsiAutoReset {
+    <#
+    .SYNOPSIS
+        Sets a value indicating whether piped strings automatically include
+        an ANSI reset command at the end to restore the default formatting.
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param
