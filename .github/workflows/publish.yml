@@ -18,7 +18,7 @@ jobs:
           $pswd = (ConvertTo-SecureString $env:PSWD -AsPlainText -Force)
           $result = Add-CodeSigning -PfxContent $env:CERT -CertificatePassword $pswd -SourceCodePath ./src
           '```' | Add-Content $env:GITHUB_STEP_SUMMARY
-          $result | Add-Content $env:GITHUB_STEP_SUMMARY
+          $result | ConvertTo-Json | Add-Content $env:GITHUB_STEP_SUMMARY
           '```' | Add-Content $env:GITHUB_STEP_SUMMARY
           $result
         env:
