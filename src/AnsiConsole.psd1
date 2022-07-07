@@ -14,7 +14,7 @@ ModuleVersion = '0.0.7'
 CompatiblePSEditions = @("Desktop", "Core")
 
 # ID used to uniquely identify this module
-GUID = 'ceaa2866-fbe6-4c33-a30a-92900b050075'
+GUID = 'ceaa2866-fbe6-4c33-a30a-92900b0.0.75'
 
 # Author of this module
 Author = 'Ken Muse'
