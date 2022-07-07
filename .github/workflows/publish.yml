@@ -25,14 +25,19 @@ jobs:
           PSWD: ${{ secrets.CODESIGN_PWD }}
           CERT: ${{ secrets.CODESIGN_PFX }}
 
-      - name: Upload signed module and tests
+      - name: Upload signed module
         uses: actions/upload-artifact@v3.1.0
         with:
-          name: Package
-          path: |
-            ./src
-            ./tests
-            PSScriptAnalyzerSettings.psd1
+          name: src
+          path: ./src/
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Upload tests
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: tests
+          path: ./tests/
           if-no-files-found: error
           retention-days: 1
 
@@ -43,14 +48,12 @@ jobs:
       - name: Download module
         uses: actions/download-artifact@v3.0.0
         with:
-          # Artifact name
-          name: Package
           path: .
-
+      - run: dir /s
       - name: Perform a Pester test
         shell: pwsh
         run: |
-          Invoke-Pester ./tests -Passthru
+          Invoke-Pester ./Package/tests -Passthru
 
       - name: Run PSScriptAnalyzer
         uses: microsoft/psscriptanalyzer-action@v1.0
@@ -75,14 +78,12 @@ jobs:
       - name: Download module
         uses: actions/download-artifact@v3.0.0
         with:
-          # Artifact name
-          name: Package
           path: .
-
+      - run: ls -a -l -R
       - name: Perform a Pester test
         shell: pwsh
         run: |
-          Invoke-Pester ./tests -Passthru
+          Invoke-Pester ./Package/tests -Passthru
 
       - name: Run PSScriptAnalyzer
         uses: microsoft/psscriptanalyzer-action@v1.0
@@ -107,14 +108,12 @@ jobs:
       - name: Download module
         uses: actions/download-artifact@v3.0.0
         with:
-          # Artifact name
-          name: Package
           path: .
 
       - name: Perform a Pester test
         shell: pwsh
         run: |
-          Invoke-Pester ./tests -Passthru
+          Invoke-Pester ./Package/tests -Passthru
 
       - name: Run PSScriptAnalyzer
         uses: microsoft/psscriptanalyzer-action@v1.0
@@ -142,11 +141,11 @@ jobs:
       - name: Download module
         uses: actions/download-artifact@v3.0.0
         with:
-         name: Package
-         path: .
+         name: src
+         path: ./src
 
       - name: List details
-        run: ls -l -a
+        run: ls -l -a -R
 
       - name: Publish
         env:
