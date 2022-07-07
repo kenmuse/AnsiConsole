@@ -4,9 +4,9 @@ on:
   #  branches:
   #    - releases/v*
   create:
-  
+
   workflow_dispatch:
-  
+
 jobs:
   build:
     # The type of runner that the job will run on
@@ -17,7 +17,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      
+
       - name: Update Version
         id: update-version
         shell: pwsh
@@ -27,7 +27,7 @@ jobs:
           $version = $ref.Substring($ref.LastIndexOf("/v") + 2)
           "::set-output name=VERSION_NUMBER::$version"
           Set-ModuleVersion -PsdPath ./src/AnsiConsole.psd1 -VersionNumber $version
-      - name: Push updated version     
+      - name: Push updated version
         shell: bash
         run: |
           git config --global user.name ${{ github.actor }}
@@ -35,12 +35,24 @@ jobs:
           git commit -am "Update version to ${{ steps.update-version.outputs.VERSION_NUMBER }}"
           git push
       - name: Create PR
+        id: create-pr
         shell: bash
         run: |
           VERSION=v${GITHUB_REF_NAME##*/v}
           echo "Version: $VERSION"
           VERSION=v${{ steps.update-version.outputs.VERSION_NUMBER }}
-          gh pr create --title "Merge $VERSION to main" --body "Prepare release $VERSION" --base main
+          PRURL=$(gh pr create --title "Merge $VERSION to main" --body "Prepare release $VERSION" --base main)
+          echo "::set-output name=PRNUMBER::${PRURL##*/}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+      - name: Annotated private methods
+        shell: pwsh
+        run: |
+          Install-Module PSMarkdown -Force
+          Import-Module PSMarkdown
+          . .\Get-Unexported.ps1
+          "# Unexported Members" | Add-Content $env:GITHUB_STEP_SUMMARY
+          $markdown = Get-Unexported | Select-Object Name, Module | ConvertTo-Markdown
+          $markdown | Add-Content $env:GITHUB_STEP_SUMMARY
+          & gh pr comment ${{ steps.create-pr.outputs.PRNUMBER }} --body $markdown
+

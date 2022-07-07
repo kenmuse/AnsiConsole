@@ -28,7 +28,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      
+
       - name: Sign code
         shell: pwsh
         run: |
@@ -38,19 +38,19 @@ jobs:
         env:
           PWD: ${{ secrets.CODESIGN_PWD }}
           CERT: ${{ secrets.CODESIGN_PFX }}
-      
+
       - name: Perform a Pester test
         shell: pwsh
         run: |
           Invoke-Pester ./tests -Passthru
-          
+
       - name: Run PSScriptAnalyzer
         uses: microsoft/psscriptanalyzer-action@v1.0
         with:
          path: .
-         recurse: true 
+         recurse: true
          output: results.sarif
-         
+
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v2
         with:
@@ -59,16 +59,17 @@ jobs:
           # Optional category for the results
           # Used to differentiate multiple results for one commit
           category: PSScriptAnalyzer
-          
-      - name: Update Repository
-        if: ${{ false }}
+
+      - name: Export list of private functions
+        if:  ${{ github.event.name == 'pull_request' && contains(github.event.pull_request.head.ref, "releases") }}
+        shell: pwsh
         run: |
-          git config --global user.name 'kenmuse'
-          git config --global user.email 'kenmuse@users.noreply.github.com'
-          git add .
-          git commit -am "Pushing updated module"
-          git push    
-          
+          Install-Module PSMarkdown -Force
+          Import-Module PSMarkdown
+          . .\Get-Unexported.ps1
+          "# Unexported Members" | Add-Content $env:GITHUB_STEP_SUMMARY
+          Get-Unexported | Select-Object Name, Module | ConvertTo-Markdown | Add-Content $env:GITHUB_STEP_SUMMARY
+
       - name: Build and publish
         if: ${{ false }}
         env:
