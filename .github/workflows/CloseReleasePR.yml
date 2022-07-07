@@ -6,6 +6,7 @@ on:
     types: [ closed ]
     branches:
       - releases/v*
+      - main
 
 jobs:
   merge_job:
