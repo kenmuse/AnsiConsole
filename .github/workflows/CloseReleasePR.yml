@@ -1,4 +1,4 @@
-name: Close Release PR
+name: "Close PR & Release"
 
 # only trigger on pull request closed events
 on:
@@ -19,6 +19,6 @@ jobs:
         echo PR #${{ github.event.number }} has been merged
         echo "${{ github.event.pull_request.head.ref }} ==> ${{ github.event.pull_request.base.ref }}"
         echo gh release create v${GITHUB_HEAD_REF##*/v}
-        gh release create v${GITHUB_HEAD_REF##*/v}
+        gh release create v${GITHUB_HEAD_REF##*/v} -t v${GITHUB_HEAD_REF##*/v}
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
