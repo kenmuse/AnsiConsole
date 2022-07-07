@@ -15,7 +15,7 @@ jobs:
         shell: pwsh
         run: |
           Install-Module PSMarkdown -Force -AllowClobber
-          using module PSMarkdown
+          Import-Module PSMarkdown
           . ./Sign-Module.ps1
           $pswd = (ConvertTo-SecureString $env:PSWD -AsPlainText -Force)
           $result = Add-CodeSigning -PfxContent $env:CERT -CertificatePassword $pswd -SourceCodePath ./src
