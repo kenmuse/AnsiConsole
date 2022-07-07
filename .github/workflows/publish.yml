@@ -37,7 +37,7 @@ jobs:
         id: version-number
         run: |
           $version = "${{ github.event.release.tag_name }}"
-          "::set-output name=VERSION::$($version.Substring(1))"
+          "::set-output name=PKG_VERSION::$($version.Substring(1))"
         shell: pwsh
 
   test-windows:
@@ -140,13 +140,14 @@ jobs:
           category: macos
   publish:
     needs:
+      - sign
       - test-windows
       - test-linux
       - test-macos
     runs-on: ubuntu-latest
     environment:
       name: PSGallery
-      url: https://www.powershellgallery.com/packages/${{ github.event.repository.name }}/${{ jobs.sign.outputs.VERSION }}
+      url: https://www.powershellgallery.com/packages/${{ github.event.repository.name }}/${{ needs.sign.outputs.PKG_VERSION }}
     steps:
       - name: Download module
         uses: actions/download-artifact@v3.0.0
