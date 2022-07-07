@@ -1,15 +1,26 @@
 Set-StrictMode -Version 'Latest'
 #Requires -Version 5.0
 
-# Configuration
-$escape = [char]0x001B
-$csi = "$escape["
-$textColorBase = 30
-$backgroundColorBase = 40
+#############################################
+# Constants
+#############################################
+
+New-Variable -Name escape -Value [char]0x001B -Option Constant
+New-Variable -Name csi -Value "$([char]0x001B)[" -Option Constant
+New-Variable -Name textColorBase -Value 30 -Option Constant
+New-Variable -Name backgroundColorBase -Value 40 -Option Constant
+
+#############################################
+# State Variables
+#############################################
 
 # Global setting which determines if ANSI graphics commands should be immediately
 # reset after processing. This ensures each line only has the specified formats.
 New-Variable -Name AnsiAutoReset -Value $true -Scope Script -Force
+
+#############################################
+# Enumerations
+#############################################
 
 enum AnsiColor {
     Black = 0
@@ -36,6 +47,10 @@ enum AnsiClear {
     All = 2
 }
 
+#############################################
+# Functions
+#############################################
+
 function Set-AnsiCursorUp {
     <#
     .SYNOPSIS
@@ -49,7 +64,7 @@ function Set-AnsiCursorUp {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor up $Amount")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor up $Amount")) {
         return "${csi}${Amount}A"
     }
 }
@@ -67,7 +82,7 @@ function Move-AnsiCursorDown {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor down $Amount")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor down $Amount")) {
         return "${csi}${Amount}B"
     }
 }
@@ -85,7 +100,7 @@ function Move-AnsiCursorForward {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor forward $Amount")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor forward $Amount")) {
         return "${csi}${Amount}C"
     }
 }
@@ -103,7 +118,7 @@ function Move-AnsiCursorBack {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor backwards $Amount")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor backwards $Amount")) {
         return "${csi}${Amount}D"
     }
 }
@@ -121,7 +136,7 @@ function Move-AnsiCursorNextLine {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor forward $Amount lines")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor forward $Amount lines")) {
         return "${csi}${Amount}E"
     }
 }
@@ -139,7 +154,7 @@ function Set-AnsiCursorPreviousLine {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor back $Amount lines")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor back $Amount lines")) {
         return "${csi}${Amount}F"
     }
 }
@@ -157,7 +172,7 @@ function Move-AnsiCursorHorizontalAbsolute {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Set cursor to horizontal position $Column")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Set cursor to horizontal position $Column")) {
         return "${csi}${Column}G"
     }
 }
@@ -175,7 +190,7 @@ function Move-AnsiCursorPosition {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor to ($Row, $Column)")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Move cursor to ($Row, $Column)")) {
         return "${csi}${row};${column}H"
     }
 }
@@ -193,7 +208,7 @@ function Move-AnsiScrollUp {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Scroll up $Amount lines")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Scroll up $Amount lines")) {
         return "${csi}${Amount}S"
     }
 }
@@ -211,7 +226,7 @@ function Move-AnsiScrollDown {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Scroll down $Amount lines")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Scroll down $Amount lines")) {
         return "${csi}${Amount}T"
     }
 }
@@ -228,7 +243,7 @@ function Save-AnsiCursor {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Save cursor position")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Save cursor position")) {
         return "${csi}s"
     }
 }
@@ -245,7 +260,7 @@ function Restore-AnsiCursor {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Restore cursor position")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Restore cursor position")) {
         return "${csi}u"
     }
 }
@@ -262,7 +277,7 @@ function Clear-AnsiDisplay {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess($Target, "Clear console")){
+    if ($Force -or $PSCmdlet.ShouldProcess($Target, "Clear console")) {
         return "${csi}${Target}J"
     }
 }
@@ -279,7 +294,7 @@ function Clear-AnsiLine {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess($target, "Clear current line")){
+    if ($Force -or $PSCmdlet.ShouldProcess($target, "Clear current line")) {
         return "${csi}${Target}K"
     }
 }
@@ -351,20 +366,16 @@ function Set-AnsiConsole {
             if ($PSBoundParameters.ContainsKey('ForegroundRGB')) {
                 [void]$commands.Add("38")
                 [void]$commands.Add("2")
-                [void]$commands.Add([Convert]::ToByte($ForegroundRGB.Substring(0, 2), 16))
-                [void]$commands.Add([Convert]::ToByte($ForegroundRGB.Substring(2, 2), 16))
-                [void]$commands.Add([Convert]::ToByte($ForegroundRGB.Substring(4, 2), 16))
+                [void]$commands.AddRange(($ForegroundRGB | Convert-ToRgbArray))
             }
             if ($PSBoundParameters.ContainsKey('BackgroundRGB')) {
                 [void]$commands.Add("48")
                 [void]$commands.Add("2")
-                [void]$commands.Add([Convert]::ToByte($BackgroundRGB.Substring(0, 2), 16))
-                [void]$commands.Add([Convert]::ToByte($BackgroundRGB.Substring(2, 2), 16))
-                [void]$commands.Add([Convert]::ToByte($BackgroundRGB.Substring(4, 2), 16))
+                [void]$commands.AddRange(($BackgroundRGB | Convert-ToRgbArray))
             }
         }
 
-        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set output format for text")){
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set output format for text")) {
             $content = $content + ($commands.ToArray() -Join ";") + "m"
             foreach ($item in $Text) {
                 return ($content + $item) | Format-AutoReset
@@ -391,7 +402,7 @@ function Set-AnsiTextColor {
     )
 
     process {
-        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set foreground text color to $Color")){
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set foreground text color to $Color")) {
             $content = "${csi}$($textColorBase + $Color)m"
             foreach ($item in $Text) {
                 return ($content + $item) | Format-AutoReset
@@ -415,7 +426,7 @@ function Set-AnsiBackgroundColor {
     )
 
     process {
-        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set background color to $Color")){
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set background color to $Color")) {
             $content = "${csi}$($backgroundColorBase + $Color)m"
             foreach ($item in $Text) {
                 return ($content + $item) | Format-AutoReset
@@ -436,7 +447,7 @@ function Set-AnsiTextPaletteColor {
     )
 
     process {
-        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set text to palette color $index")){
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set text to palette color $index")) {
             $content = "${csi}38;5;${index}m"
             foreach ($item in $Text) {
                 return ($content + $item) | Format-AutoReset
@@ -457,7 +468,7 @@ function Set-AnsiBackgroundPaletteColor {
     )
 
     process {
-        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set background to palette color $index")){
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set background to palette color $index")) {
             $content = "${csi}48;5;${index}m"
             foreach ($item in $Text) {
                 return ($content + $item) | Format-AutoReset
@@ -476,7 +487,7 @@ function Set-AnsiTextRgbColor {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Set text tp RGB ($Red, $Green, $Blue)")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Set text tp RGB ($Red, $Green, $Blue)")) {
         return "${csi}38;2;$Red;$Green;${Blue}m"
     }
 }
@@ -491,7 +502,7 @@ function Set-AnsiBackgroundRgbColor {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Set background to RGB ($Red, $Green, $Blue)")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Set background to RGB ($Red, $Green, $Blue)")) {
         return "${csi}48;2;$Red;$Green;${Blue}m"
     }
 }
@@ -505,7 +516,7 @@ function Reset-AnsiConsole {
     )
 
     process {
-        if ($Force -or $PSCmdlet.ShouldProcess("console", "Reset all ANSI graphics states")){
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Reset all ANSI graphics states")) {
             return "${csi}0m"
         }
     }
@@ -519,7 +530,7 @@ function Set-AnsiBold {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable bold")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable bold")) {
         return "${csi}1m"
     }
 }
@@ -532,7 +543,7 @@ function Set-AnsiDim {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable dim")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable dim")) {
         return "${csi}2m"
     }
 }
@@ -545,7 +556,7 @@ function Set-AnsiItalic {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable italic")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable italic")) {
         return "${csi}3m"
     }
 }
@@ -558,7 +569,7 @@ function Set-AnsiUnderline {
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable underline")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable underline")) {
         return "${csi}4m"
     }
 }
@@ -572,7 +583,7 @@ function Reset-AnsiBold {
         [switch]$Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable bold")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable bold")) {
         return "${csi}22m"
     }
 }
@@ -585,7 +596,7 @@ function Reset-AnsiDim {
         [switch]$Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable dim")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable dim")) {
         return "${csi}22m"
     }
 }
@@ -598,7 +609,7 @@ function Reset-AnsiItalic {
         [switch]$Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable italics")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable italics")) {
         return "${csi}23m"
     }
 }
@@ -611,7 +622,7 @@ function Reset-AnsiUnderline {
         [switch]$Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable underline")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable underline")) {
         return "${csi}24m"
     }
 }
@@ -636,8 +647,33 @@ function Set-AnsiAutoReset {
         [switch]$Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable automatic ANSI reset")){
+    if ($Force -or $PSCmdlet.ShouldProcess("console", "Disable automatic ANSI reset")) {
         $script:AnsiAutoReset = $Value
+    }
+}
+
+#############################################
+# Private Functions
+#############################################
+function Convert-ToRgbArray {
+    [CmdletBinding()]
+    [OutputType([string[]])]
+    param (
+        [parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
+        [ValidateLength(6, 7)]
+        [ValidatePattern('^#?[0-9A-Fa-f]{6}$')]
+        [string] $Value
+    )
+
+    process {
+        $result = New-Object System.Collections.ArrayList
+        $index = (0, 1)[$Value.Length -eq 7]
+
+        [void]$result.Add([Convert]::ToByte($Value.Substring(0 + $index, 2), 16))
+        [void]$result.Add([Convert]::ToByte($Value.Substring(2 + $index, 2), 16))
+        [void]$result.Add([Convert]::ToByte($Value.Substring(4 + $index, 2), 16))
+        return $result.ToArray();
     }
 }
 
@@ -662,4 +698,40 @@ function Format-AutoReset {
     }
 }
 
-Export-ModuleMember -Function Set-Ansi*, Get-Ansi*, Reset-Ansi*, Save-AnsiCursor, Restore-AnsiCursor, Move-Ansi*, Clear-Ansi*
+#############################################
+# Exports
+#############################################
+Export-ModuleMember -Function @(
+    "Clear-AnsiDisplay",
+    "Clear-AnsiLine",
+    "Get-AnsiAutoReset",
+    "Move-AnsiCursorBack",
+    "Move-AnsiCursorDown",
+    "Move-AnsiCursorForward",
+    "Move-AnsiCursorHorizontalAbsolute",
+    "Move-AnsiCursorNextLine",
+    "Move-AnsiCursorPosition",
+    "Move-AnsiScrollDown",
+    "Move-AnsiScrollUp",
+    "Reset-AnsiBold",
+    "Reset-AnsiConsole",
+    "Reset-AnsiDim",
+    "Reset-AnsiItalic",
+    "Reset-AnsiUnderline",
+    "Restore-AnsiCursor",
+    "Save-AnsiCursor",
+    "Set-AnsiAutoReset",
+    "Set-AnsiBackgroundColor",
+    "Set-AnsiBackgroundPaletteColor",
+    "Set-AnsiBackgroundRgbColor",
+    "Set-AnsiBold",
+    "Set-AnsiConsole",
+    "Set-AnsiCursorPreviousLine",
+    "Set-AnsiCursorUp",
+    "Set-AnsiDim",
+    "Set-AnsiItalic",
+    "Set-AnsiTextColor",
+    "Set-AnsiTextPaletteColor",
+    "Set-AnsiTextRgbColor",
+    "Set-AnsiUnderline"
+)

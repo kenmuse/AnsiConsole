@@ -66,6 +66,8 @@ PowerShellVersion = '5.0'
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
+    "Clear-AnsiDisplay",
+    "Clear-AnsiLine",
     "Get-AnsiAutoReset",
     "Move-AnsiCursorBack",
     "Move-AnsiCursorDown",

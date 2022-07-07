@@ -17,7 +17,8 @@
 			"extensions": [
 				"ms-vscode.powershell",
 				"ms-azuretools.vscode-docker",
-				"redhat.vscode-yaml"
+				"redhat.vscode-yaml",
+        "editorconfig.editorconfig"
 				//"pspester.pester-test",
 				//"TylerLeonhardt.vscode-pester-test-adapter"
 			]
