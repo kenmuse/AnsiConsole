@@ -29,7 +29,7 @@ Copyright = '(c) 2022 Ken Muse. All rights reserved.'
 # Description = 'Supports the use of ANSI escape sequences'
 
 # Minimum version of the PowerShell engine required by this module
-PowerShellVersion = '5.0'
+PowerShellVersion = '5.1'
 
 # Name of the PowerShell host required by this module
 # PowerShellHostName = ''
