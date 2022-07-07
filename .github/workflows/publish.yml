@@ -33,26 +33,17 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-      - name: Upload testable code
-        uses: actions/upload-artifact@v3.1.0
-        with:
-          name: Code
-          path: |
-           ./src
-           ./tests
-           ./PSScriptAnalyzerSettings.psd1
-          if-no-files-found: error
-          retention-days: 1
-
   test-windows:
     runs-on: windows-latest
     needs: sign
     steps:
-      - name: Download code
+      - uses: actions/checkout@v3
+
+      - name: Download signed code
         uses: actions/download-artifact@v3.0.0
         with:
-          name: Code
-          path: .
+          name: ${{ github.event.repository.name }}
+          path: ./src
 
       - name: Perform a Pester test
         shell: pwsh
@@ -79,11 +70,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: sign
     steps:
-      - name: Download code
+      - uses: actions/checkout@v3
+
+      - name: Download signed code
         uses: actions/download-artifact@v3.0.0
         with:
-          name: Code
-          path: .
+          name: ${{ github.event.repository.name }}
+          path: ./src
 
       - name: Perform a Pester test
         shell: pwsh
@@ -110,11 +103,13 @@ jobs:
     runs-on: macos-latest
     needs: sign
     steps:
-      - name: Download code
+      - uses: actions/checkout@v3
+
+      - name: Download signed code
         uses: actions/download-artifact@v3.0.0
         with:
-          name: Code
-          path: .
+          name: ${{ github.event.repository.name }}
+          path: ./src
 
       - name: Perform a Pester test
         shell: pwsh
