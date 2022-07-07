@@ -1,4 +1,4 @@
-name: Create Release
+name: Open Release PR
 on:
   # push:
   #  branches:

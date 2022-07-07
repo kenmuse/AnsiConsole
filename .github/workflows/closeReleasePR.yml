@@ -5,7 +5,6 @@ on:
   pull_request:
     types: [ closed ]
     branches:
-      - releases/v*
       - main
 
 jobs:
@@ -16,9 +15,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: |
-        echo PR #${{ github.event.number }} has been merged
-        echo "${{ github.event.pull_request.head.ref }} ==> ${{ github.event.pull_request.base.ref }}"
-        echo gh release create v${GITHUB_HEAD_REF##*/v}
+        echo "# Release v${GITHUB_HEAD_REF##*/v} :rocket:" >> $GITHUB_STEP_SUMMARY
+        echo "PR #${{ github.event.number }} has been merged  " >> $GITHUB_STEP_SUMMARY
+        echo "${{ github.event.pull_request.head.ref }} :arrow_right: ${{ github.event.pull_request.base.ref }}" >> $GITHUB_STEP_SUMMARY
         gh release create v${GITHUB_HEAD_REF##*/v} -t v${GITHUB_HEAD_REF##*/v}
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

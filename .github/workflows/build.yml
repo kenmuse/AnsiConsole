@@ -29,17 +29,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - name: Sign code
-        if: ${{ github.event.name == 'pull_request' && contains(github.event.pull_request.head.ref, 'releases') }}
-        shell: pwsh
-        run: |
-          . ./Sign-Module.ps1
-          $pwd = (ConvertTo-SecureString $env:PWD -AsPlainText -Force)
-          Add-CodeSigning -PfxContent $env:CERT -CertificatePassword $pwd -SourceCodePath ./src
-        env:
-          PWD: ${{ secrets.CODESIGN_PWD }}
-          CERT: ${{ secrets.CODESIGN_PFX }}
-
       - name: Perform a Pester test
         shell: pwsh
         run: |
@@ -59,7 +48,7 @@ jobs:
           sarif_file: results.sarif
           # Optional category for the results
           # Used to differentiate multiple results for one commit
-          category: PSScriptAnalyzer
+          category: windows
       - name: Export Event Details
         run: echo "${{ toJson(github) }}"
 
@@ -72,11 +61,3 @@ jobs:
           . .\Get-Unexported.ps1
           "# Unexported Members" | Add-Content $env:GITHUB_STEP_SUMMARY
           Get-Unexported | Select-Object Name, Module | ConvertTo-Markdown | Add-Content $env:GITHUB_STEP_SUMMARY
-
-      - name: Build and publish
-        if: ${{ false }}
-        env:
-          NUGET_KEY: ${{ secrets.PSGALLERY_API }}
-        shell: pwsh
-        run: |
-          Publish-Module -Path ./src -NuGetApiKey $env:NUGET_KEY -Verbose
