@@ -49,8 +49,6 @@ jobs:
           # Optional category for the results
           # Used to differentiate multiple results for one commit
           category: windows
-      - name: Export Event Details
-        run: echo "${{ toJson(github) }}"
 
       - name: Export list of private functions
         if: ${{ github.event.name == 'pull_request' && contains(github.event.pull_request.head.ref, 'releases') }}
