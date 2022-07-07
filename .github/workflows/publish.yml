@@ -7,7 +7,7 @@ on:
     types: [published]
 
 jobs:
-  build:
+  sign:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -15,11 +15,15 @@ jobs:
       - name: Sign code
         shell: pwsh
         run: |
+          Install-Module PSMarkdown -Force
+          Import-Module PSMarkdown
           . ./Sign-Module.ps1
-          $pwd = (ConvertTo-SecureString $env:PWD -AsPlainText -Force)
-          Add-CodeSigning -PfxContent $env:CERT -CertificatePassword $pwd -SourceCodePath ./src
+          $pswd = (ConvertTo-SecureString $env:PSWD -AsPlainText -Force)
+          $result = Add-CodeSigning -PfxContent $env:CERT -CertificatePassword $pswd -SourceCodePath ./src
+          $result | ConvertTo-Markdown | | Out-String | Add-Content $env:GITHUB_STEP_SUMMARY
+          $result
         env:
-          PWD: ${{ secrets.CODESIGN_PWD }}
+          PSWD: ${{ secrets.CODESIGN_PWD }}
           CERT: ${{ secrets.CODESIGN_PFX }}
 
       - name: Upload signed code
@@ -38,7 +42,7 @@ jobs:
 
   test-windows:
     runs-on: windows-latest
-    needs: build
+    needs: sign
     steps:
       - name: Download module
         uses: actions/download-artifact@v3.0.0
@@ -70,7 +74,7 @@ jobs:
 
   test-linux:
     runs-on: ubuntu-latest
-    needs: build
+    needs: sign
     steps:
       - name: Download module
         uses: actions/download-artifact@v3.0.0
@@ -102,7 +106,7 @@ jobs:
 
   test-macos:
     runs-on: macos-latest
-    needs: build
+    needs: sign
     steps:
       - name: Download module
         uses: actions/download-artifact@v3.0.0
@@ -133,7 +137,6 @@ jobs:
           category: macos
   publish:
     needs:
-      - build
       - test-windows
       - test-linux
       - test-macos
