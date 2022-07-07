@@ -61,7 +61,7 @@ jobs:
           category: PSScriptAnalyzer
 
       - name: Export list of private functions
-        if:  ${{ github.event.name == 'pull_request' && contains(github.event.pull_request.head.ref, "releases") }}
+        if:  ${{ github.event.name == 'pull_request' && contains(github.event.pull_request.head.ref, 'releases') }}
         shell: pwsh
         run: |
           Install-Module PSMarkdown -Force
