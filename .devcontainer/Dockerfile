@@ -1,4 +1,8 @@
-FROM mcr.microsoft.com/powershell:lts-debian-11
+FROM mcr.microsoft.com/dotnet/runtime:6.0-bullseye-slim
+ARG TARGETARCH
+ARG PWSH_VERSION=7.2.5
+
+#https://github.com/PowerShell/PowerShell/releases/download/v7.2.5/powershell-7.2.5-linux-arm64.tar.gz
 
 # [Option] Install zsh
 ARG INSTALL_ZSH="true"
@@ -19,4 +23,19 @@ RUN apt-get update \
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
-RUN pwsh -Command Install-Module -Name Pester -Force -SkipPublisherCheck -Scope AllUsers
+# Download the powershell '.tar.gz' archive
+#x64
+ARG PWSH_ARCH=arm64
+RUN if ["${TARGETARCH}" = "amd64"]; then { \
+      curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v${PWSH_VERSION}/powershell-${PWSH_VERSION}-linux-x64.tar.gz; \
+    } else { \
+      curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v${PWSH_VERSION}/powershell-${PWSH_VERSION}-linux-arm64.tar.gz; \
+    } \
+    fi \
+ && sudo mkdir -p /opt/microsoft/powershell/7 \
+ && sudo tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 \
+ && sudo chmod +x /opt/microsoft/powershell/7/pwsh \
+ && sudo ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
+
+RUN pwsh -Command Install-Module -Name Pester -Force -Scope AllUsers \
+  && pwsh -Command Install-Module -Name PSScriptAnalyzer -Force -Scope AllUsers
