@@ -40,7 +40,7 @@ jobs:
     - name: Acquire Release Token
       uses: tibdex/github-app-token@v1
       id: get-token
-      if: ${{ startsWith(steps.set-version.outputs.TAG_VERSION, 'v') && contains(steps.set-version.outputs.TAG_VERSION. '.') }}
+      if: ${{ startsWith(steps.set-version.outputs.TAG_VERSION, 'v') && contains(steps.set-version.outputs.TAG_VERSION, '.') }}
       with:
         app_id: ${{ secrets.RELEASE_APP_ID }}
         installation_id: ${{ secrets.RELEASE_APP_INSTALLID }}
