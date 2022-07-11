@@ -24,11 +24,11 @@ RUN apt-get update \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
 # Download the powershell '.tar.gz' archive
-#x64
-ARG PWSH_ARCH=arm64
-RUN if ["${TARGETARCH}" = "amd64"]; then { \
+RUN if [ "${TARGETARCH}" = "amd64" ]; then { \
+      echo "Installing x64 PowerShell, version ${PWSH_VERSION}"; \
       curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v${PWSH_VERSION}/powershell-${PWSH_VERSION}-linux-x64.tar.gz; \
     } else { \
+      echo "Installing arm64 PowerShell, version ${PWSH_VERSION}"; \
       curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v${PWSH_VERSION}/powershell-${PWSH_VERSION}-linux-arm64.tar.gz; \
     } \
     fi \

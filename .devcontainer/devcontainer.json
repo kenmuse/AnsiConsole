@@ -4,6 +4,14 @@
 	"name": "PowerShell",
 	"dockerFile": "Dockerfile",
 
+	"remoteUser": "vscode",
+	"build": {
+		"args": {
+			"INSTALL_ZSH": "false",
+			"UPGRADE_PACKAGES": "true"
+		}
+	},
+
 	// Configure tool-specific properties.
 	"customizations": {
 		// Configure properties specific to VS Code.
@@ -33,14 +41,5 @@
 	// "forwardPorts": [],
 
 	// Uncomment the next line to run commands after the container is created. This gets run in bash which is why we call `pwsh`.
-	// "postCreateCommand": "pwsh -c '$PSVersionTable'",
-
-	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "vscode",
-	"build": {
-		"args": {
-			"INSTALL_ZSH": "false",
-			"UPGRADE_PACKAGES": "true"
-		}
-	}
+	// "postCreateCommand": "pwsh -c '$PSVersionTable'"
 }
