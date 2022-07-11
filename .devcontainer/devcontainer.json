@@ -20,9 +20,11 @@
 				"redhat.vscode-yaml",
 				"editorconfig.editorconfig",
 				"mhutchie.git-graph",
-				"eamodio.gitlens"
-				//"pspester.pester-test",
-				//"TylerLeonhardt.vscode-pester-test-adapter"
+				"eamodio.gitlens",
+				"heaths.vscode-guid",
+				"DavidAnson.vscode-markdownlint"
+        // "TylerLeonhardt.vscode-pester-test-adapter",
+				// "pspester.pester-test"
 			]
 		}
 	},
