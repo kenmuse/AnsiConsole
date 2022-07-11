@@ -47,7 +47,7 @@ jobs:
         private_key: ${{ secrets.RELEASE_APP_KEY }}
 
     - name: Create Release
-      if: ${{ startsWith(steps.set-version.outputs.TAG_VERSION, 'v') && contains(steps.set-version.outputs.TAG_VERSION. '.') }}
+      if: ${{ startsWith(steps.set-version.outputs.TAG_VERSION, 'v') && contains(steps.set-version.outputs.TAG_VERSION, '.') }}
       run: gh release create ${{ steps.set-version.outputs.TAG_VERSION }} -t ${{ steps.set-version.outputs.TAG_VERSION }} -n "Published by ${{ github.actor }}" --target "${{github.event.pull_request.head.sha}}"
       env:
         GH_TOKEN: ${{ steps.get-token.outputs.token }}
