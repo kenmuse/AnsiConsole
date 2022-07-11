@@ -497,14 +497,21 @@ function Set-AnsiTextRgbColor {
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param (
+        [parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [string[]] $Text,
         [byte] $Red,
         [byte] $Green,
         [byte] $Blue,
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Set text tp RGB ($Red, $Green, $Blue)")) {
-        return "${csi}38;2;$Red;$Green;${Blue}m"
+    process {
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set text tp RGB ($Red, $Green, $Blue)")) {
+            $content = "${csi}38;2;$Red;$Green;${Blue}m"
+            foreach ($item in $Text) {
+                return ($content + $item) | Format-AutoReset
+            }
+        }
     }
 }
 
@@ -516,14 +523,20 @@ function Set-AnsiBackgroundRgbColor {
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     [OutputType([string])]
     param (
+        [parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [string[]] $Text,
         [byte] $Red,
         [byte] $Green,
         [byte] $Blue,
         [switch] $Force
     )
-
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Set background to RGB ($Red, $Green, $Blue)")) {
-        return "${csi}48;2;$Red;$Green;${Blue}m"
+    process {
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Set background to RGB ($Red, $Green, $Blue)")) {
+            $content = "${csi}48;2;$Red;$Green;${Blue}m"
+            foreach ($item in $Text) {
+                return ($content + $item) | Format-AutoReset
+            }
+        }
     }
 }
 
@@ -555,11 +568,18 @@ function Set-AnsiBold {
     [OutputType([string])]
     param
     (
+        [parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [string[]] $Text,
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable bold")) {
-        return "${csi}1m"
+    process {
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable bold")) {
+            $content = "${csi}1m"
+            foreach ($item in $Text) {
+                return ($content + $item) | Format-AutoReset
+            }
+        }
     }
 }
 
@@ -572,11 +592,17 @@ function Set-AnsiDim {
     [OutputType([string])]
     param
     (
+        [parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [string[]] $Text,
         [switch] $Force
     )
-
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable dim")) {
-        return "${csi}2m"
+    process {
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable dim")) {
+            $content = "${csi}2m"
+            foreach ($item in $Text) {
+                return ($content + $item) | Format-AutoReset
+            }
+        }
     }
 }
 
@@ -589,11 +615,17 @@ function Set-AnsiItalic {
     [OutputType([string])]
     param
     (
+        [parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [string[]] $Text,
         [switch] $Force
     )
-
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable italic")) {
-        return "${csi}3m"
+    process {
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable italic")) {
+            $content = "${csi}3m"
+            foreach ($item in $Text) {
+                return ($content + $item) | Format-AutoReset
+            }
+        }
     }
 }
 
@@ -606,11 +638,18 @@ function Set-AnsiUnderline {
     [OutputType([string])]
     param
     (
+        [parameter(ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [string[]] $Text,
         [switch] $Force
     )
 
-    if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable underline")) {
-        return "${csi}4m"
+    process {
+        if ($Force -or $PSCmdlet.ShouldProcess("console", "Enable underline")) {
+            $content = "${csi}4m"
+            foreach ($item in $Text) {
+                return ($content + $item) | Format-AutoReset
+            }
+        }
     }
 }
 
