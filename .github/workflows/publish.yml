@@ -85,9 +85,7 @@ jobs:
   publish:
     needs:
       - sign
-      - test-windows
-      - test-linux
-      - test-macos
+      - test
     runs-on: ubuntu-latest
     environment:
       name: PSGallery
