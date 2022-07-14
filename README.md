@@ -25,7 +25,7 @@ default behavior:
 Set-AnsiAutoReset $false
 ```
 
-## Build Process
+## Release Process
 The build workflow publishes a module to the [PowerShell Gallery](https://www.powershellgallery.com/packages/AnsiConsole).
 
 The process relies on a few steps:
