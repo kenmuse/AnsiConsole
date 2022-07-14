@@ -14,8 +14,8 @@ Describe "Automatic reset disabled" {
     Context "Given a request to set the console text color to red with reset disabled" {
         It "Should not automatically reset the state at the end" {
             Set-AnsiAutoReset $false
-            "Test"
-            | Set-AnsiConsole -Foreground Red
+            "Test" `
+            | Set-AnsiConsole -Foreground Red `
             | Should -Be ("$([char]0x001B)[31mTest")
         }
 
@@ -28,8 +28,8 @@ Describe "Automatic reset disabled" {
 Describe "Automatic reset" {
     Context "Given a request to set the console text color to red" {
         It "Should automatically reset the state at the end" {
-            "Test"
-            | Set-AnsiConsole -Foreground Red
+            "Test" `
+            | Set-AnsiConsole -Foreground Red `
             | Should -Be ("$([char]0x001B)[31mTest$([char]0x001B)[0m")
         }
     }
@@ -39,7 +39,7 @@ Describe "Parse RGB Hex values using Convert-ToRgbArray" {
     Context "Given an RGB string value 12ABEF" {
         It "Should parse the RGB value to an RGB array" {
             InModuleScope $ModuleName {
-                Convert-ToRgbArray -Value "12ABEF"
+                Convert-ToRgbArray -Value "12ABEF" `
                 | Should -Be @([byte]0x12, [byte]0xAB, [byte]0xEF)
             }
         }
@@ -48,7 +48,7 @@ Describe "Parse RGB Hex values using Convert-ToRgbArray" {
     Context "Given an RGB string value #CA2345" {
         It "Should parse the prefixed RGB value to an RGB array" {
             InModuleScope $ModuleName {
-                Convert-ToRgbArray -Value "#CA2345"
+                Convert-ToRgbArray -Value "#CA2345" `
                 | Should -Be @([byte]0xCA, [byte]0x23, [byte]0x45)
             }
         }
@@ -57,7 +57,7 @@ Describe "Parse RGB Hex values using Convert-ToRgbArray" {
     Context "Given an RGB string value 12ABEFA" {
         It "Should fail to parse" {
             InModuleScope $ModuleName {
-                { Convert-ToRgbArray -Value "12ABEFA" }
+                { Convert-ToRgbArray -Value "12ABEFA" } `
                 | Should -Throw
             }
         }
@@ -66,7 +66,7 @@ Describe "Parse RGB Hex values using Convert-ToRgbArray" {
     Context "Given an RGB string value #CA2345A" {
         It "Should fail to parse" {
             InModuleScope $ModuleName {
-                { Convert-ToRgbArray -Value "#CA2345A" }
+                { Convert-ToRgbArray -Value "#CA2345A" } `
                 | Should -Throw
             }
         }
