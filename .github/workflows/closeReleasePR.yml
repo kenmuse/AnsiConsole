@@ -11,8 +11,8 @@ on:
 
 jobs:
   merge_job:
-    # this job will only run if the PR has been merged
-    if: ${{ github.event.pull_request.merged == true  && startsWith(steps.set-version.outputs.TAG_VERSION, 'v') && contains(steps.set-version.outputs.TAG_VERSION, '.')}}
+    # this job will only run if the PR has been merged and the branch name indicates a release
+    if: ${{ github.event.pull_request.merged == true  && startsWith(github.event.pull_request.head.ref, 'releases/v') }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
