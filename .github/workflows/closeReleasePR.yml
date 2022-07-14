@@ -12,7 +12,7 @@ on:
 jobs:
   merge_job:
     # this job will only run if the PR has been merged
-    if: ${{ github.event.pull_request.merged == true }}
+    if: ${{ github.event.pull_request.merged == true  && startsWith(steps.set-version.outputs.TAG_VERSION, 'v') && contains(steps.set-version.outputs.TAG_VERSION, '.')}}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -20,12 +20,13 @@ jobs:
       run: |
         echo "# Release ${GITHUB_HEAD_REF##*/} :rocket:" >> $GITHUB_STEP_SUMMARY
         echo "Ref: ${GITHUB_HEAD_REF}  " >> $GITHUB_STEP_SUMMARY
+        echo "SHA: ${{github.event.pull_request.head.sha}}. " >> $GITHUB_STEP_SUMMARY
         echo "PR #${{ github.event.number }} has been merged  " >> $GITHUB_STEP_SUMMARY
         echo "${{ github.event.pull_request.head.ref }} :arrow_right: ${{ github.event.pull_request.base.ref }}" >> $GITHUB_STEP_SUMMARY
-        echo gh release create ${GITHUB_HEAD_REF##*/} -t ${GITHUB_HEAD_REF##*/} -n "Published by ${{ github.actor }}" --target "${{ github.head_ref }}"
         echo "::set-output name=TAG_VERSION::${GITHUB_HEAD_REF##*/}"
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - uses: actions/github-script@v5
       if: ${{ false }}
       with:
@@ -40,14 +41,12 @@ jobs:
     - name: Acquire Release Token
       uses: tibdex/github-app-token@v1
       id: get-token
-      if: ${{ startsWith(steps.set-version.outputs.TAG_VERSION, 'v') && contains(steps.set-version.outputs.TAG_VERSION, '.') }}
       with:
         app_id: ${{ secrets.RELEASE_APP_ID }}
         installation_id: ${{ secrets.RELEASE_APP_INSTALLID }}
         private_key: ${{ secrets.RELEASE_APP_KEY }}
 
     - name: Create Release
-      if: ${{ startsWith(steps.set-version.outputs.TAG_VERSION, 'v') && contains(steps.set-version.outputs.TAG_VERSION, '.') }}
       run: gh release create ${{ steps.set-version.outputs.TAG_VERSION }} -t ${{ steps.set-version.outputs.TAG_VERSION }} -n "Published by ${{ github.actor }}" --target "${{github.event.pull_request.head.sha}}"
       env:
         GH_TOKEN: ${{ steps.get-token.outputs.token }}

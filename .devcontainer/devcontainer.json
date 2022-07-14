@@ -30,9 +30,8 @@
 				"mhutchie.git-graph",
 				"eamodio.gitlens",
 				"heaths.vscode-guid",
-				"DavidAnson.vscode-markdownlint"
-        // "TylerLeonhardt.vscode-pester-test-adapter",
-				// "pspester.pester-test"
+				"DavidAnson.vscode-markdownlint",
+				"bierner.markdown-mermaid"
 			]
 		}
 	},

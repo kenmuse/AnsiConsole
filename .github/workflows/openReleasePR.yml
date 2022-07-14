@@ -26,6 +26,7 @@ jobs:
           $version = $ref.Substring($ref.LastIndexOf("/v") + 2)
           "::set-output name=VERSION_NUMBER::$version"
           Set-ModuleVersion -PsdPath ./src/AnsiConsole.psd1 -VersionNumber $version
+
       - name: Push updated version
         shell: bash
         run: |
@@ -33,17 +34,18 @@ jobs:
           git config --global user.email '${{ github.actor }}@users.noreply.github.com'
           git commit -am "Update version to ${{ steps.update-version.outputs.VERSION_NUMBER }}"
           git push
+
       - name: Create PR
         id: create-pr
         shell: bash
         run: |
-          VERSION=v${GITHUB_REF_NAME##*/v}
-          echo "Version: $VERSION"
+          echo "Ref: ${GITHUB_REF_NAME}"
           VERSION=v${{ steps.update-version.outputs.VERSION_NUMBER }}
           PRURL=$(gh pr create --title "Merge $VERSION to main" --body "Prepare release $VERSION" --base main)
           echo "::set-output name=PRNUMBER::${PRURL##*/}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Annotated private methods
         shell: pwsh
         run: |
