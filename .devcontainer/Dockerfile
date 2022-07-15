@@ -2,8 +2,6 @@ FROM mcr.microsoft.com/dotnet/runtime:6.0-bullseye-slim
 ARG TARGETARCH
 ARG PWSH_VERSION=7.2.5
 
-#https://github.com/PowerShell/PowerShell/releases/download/v7.2.5/powershell-7.2.5-linux-arm64.tar.gz
-
 # [Option] Install zsh
 ARG INSTALL_ZSH="true"
 # [Option] Upgrade OS packages to their latest versions
@@ -37,5 +35,6 @@ RUN if [ "${TARGETARCH}" = "amd64" ]; then { \
  && sudo chmod +x /opt/microsoft/powershell/7/pwsh \
  && sudo ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 
+# Configure standard PowerShell linting/testing modules
 RUN pwsh -Command Install-Module -Name Pester -Force -Scope AllUsers \
   && pwsh -Command Install-Module -Name PSScriptAnalyzer -Force -Scope AllUsers
